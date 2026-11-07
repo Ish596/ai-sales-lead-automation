@@ -1,0 +1,2271 @@
+{
+  "name": "sales lead automation",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "placement data ",
+        "formDescription": "fill the correct information",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name"
+            },
+            {
+              "fieldLabel": "Roll no",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "branch"
+            },
+            {
+              "fieldLabel": "Mail",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "company name "
+            },
+            {
+              "fieldLabel": "website"
+            },
+            {
+              "fieldLabel": "job title"
+            },
+            {
+              "fieldLabel": "interest area "
+            },
+            {
+              "fieldLabel": "submission on",
+              "fieldType": "date"
+            },
+            {
+              "fieldLabel": "form mode"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "658460f6-3f1b-4d1a-b093-8a1b7e46d36b",
+      "name": "On form submission",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        -608
+      ],
+      "webhookId": "c5193974-6639-4e77-9b8f-b3c86f4ec067"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "42a09429-3774-46b9-9f79-7ea56b205396",
+              "leftValue": "={{ $json.Mail.isEmail() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6757de80-98a6-4c3d-94c0-0fec11124393",
+      "name": "check mail",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        224,
+        -608
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "emailVerifier",
+        "email": "={{ $json.Mail }}"
+      },
+      "id": "2306ff3b-eeb3-4cef-93f8-97a6e3075f44",
+      "name": "verify email",
+      "type": "n8n-nodes-base.hunter",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -704
+      ],
+      "credentials": {
+        "hunterApi": {
+          "id": "5bwGTxZALJOJii3c",
+          "name": "clg mail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "1ce97bd4-2064-4a59-8ed3-58cbe18e7a21",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "valid",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "c913ea47-0209-41c4-9d14-5da33da6b610",
+              "leftValue": "={{ $json.score }}",
+              "rightValue": 20,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "id": "a243341c-5b2f-4b9a-a585-b48f549b059f",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        672,
+        -704
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1qPbLu6DY4jl0VQWjrq8mDz2V9-URoLQFeCIozB_fYcI",
+          "mode": "list",
+          "cachedResultName": "data for project 1 ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qPbLu6DY4jl0VQWjrq8mDz2V9-URoLQFeCIozB_fYcI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qPbLu6DY4jl0VQWjrq8mDz2V9-URoLQFeCIozB_fYcI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('On form submission').item.json.Name }}",
+            "Roll No": "={{ $('On form submission').item.json['Roll no'] }}",
+            "Branch": "={{ $('On form submission').item.json.branch }}",
+            "Email": "={{ $('On form submission').item.json.Mail }}",
+            "Company Name": "={{ $('On form submission').item.json['company name '] }}",
+            "Website": "={{ $('On form submission').item.json.website }}",
+            "Job Title": "={{ $('On form submission').item.json['job title'] }}",
+            "Interest Area": "={{ $('On form submission').item.json['interest area '] }}",
+            "Submission Date": "={{ $('On form submission').item.json['submission on'] }}",
+            "Form Mode": "={{ $('On form submission').item.json['form mode'] }}",
+            "Submitted At": "={{ $('On form submission').item.json.submittedAt }}",
+            "Record Type": "={{ $('On form submission').item.json.formMode }}",
+            "Verification Status": "={{ $('verify email').item.json.status }}",
+            "Verification Score": "={{ $('verify email').item.json.score }}",
+            "Enrichment Status": "Found",
+            "Enriched Name": "={{ $json.data?.person?.name?.fullName ?? '' }}",
+            "Enriched Title": "={{ $json.data?.person?.employment?.title ?? '' }}",
+            "Enriched Company": "={{ $json.data?.company?.name ?? '' }}",
+            "Enriched Domain": "={{ $json.data?.company?.domain ?? '' }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Roll No",
+              "displayName": "Roll No",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Branch",
+              "displayName": "Branch",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Job Title",
+              "displayName": "Job Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Interest Area",
+              "displayName": "Interest Area",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Submission Date",
+              "displayName": "Submission Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Form Mode",
+              "displayName": "Form Mode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Submitted At",
+              "displayName": "Submitted At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Record Type",
+              "displayName": "Record Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Verification Status",
+              "displayName": "Verification Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Verification Score",
+              "displayName": "Verification Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Enrichment Status",
+              "displayName": "Enrichment Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Enriched Name",
+              "displayName": "Enriched Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Enriched Title",
+              "displayName": "Enriched Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Enriched Company",
+              "displayName": "Enriched Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Enriched Domain",
+              "displayName": "Enriched Domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "12bb66d1-2c6f-47bf-9cfa-e223bfabbd70",
+      "name": "Enrichment Found",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1120,
+        -752
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g0cBbMEEjFcHv494",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1qPbLu6DY4jl0VQWjrq8mDz2V9-URoLQFeCIozB_fYcI",
+          "mode": "list",
+          "cachedResultName": "data for project 1 ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qPbLu6DY4jl0VQWjrq8mDz2V9-URoLQFeCIozB_fYcI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qPbLu6DY4jl0VQWjrq8mDz2V9-URoLQFeCIozB_fYcI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.Name }}",
+            "Roll No": "={{ $json['Roll no'] }}",
+            "Branch": "={{ $json.branch }}",
+            "Email": "={{ $json.Mail }}",
+            "Company Name": "={{ $json['company name '] }}",
+            "Website": "={{ $json.website }}",
+            "Job Title": "={{ $json['job title'] }}",
+            "Interest Area": "={{ $json['interest area '] }}",
+            "Submission Date": "={{ $json['submission on'] }}",
+            "Form Mode": "={{ $json['form mode'] }}",
+            "Submitted At": "={{ $json.submittedAt }}",
+            "Record Type": "={{ $json.formMode }}",
+            "status": "3 rd verifaction failed "
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Roll No",
+              "displayName": "Roll No",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Branch",
+              "displayName": "Branch",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Job Title",
+              "displayName": "Job Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Interest Area",
+              "displayName": "Interest Area",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Submission Date",
+              "displayName": "Submission Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Form Mode",
+              "displayName": "Form Mode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Submitted At",
+              "displayName": "Submitted At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Record Type",
+              "displayName": "Record Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1cf49c3b-1a23-4d06-8d2f-d81da783d89e",
+      "name": "failed after 3 rd e mail verification",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        896,
+        -608
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g0cBbMEEjFcHv494",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1qPbLu6DY4jl0VQWjrq8mDz2V9-URoLQFeCIozB_fYcI",
+          "mode": "list",
+          "cachedResultName": "data for project 1 ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qPbLu6DY4jl0VQWjrq8mDz2V9-URoLQFeCIozB_fYcI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qPbLu6DY4jl0VQWjrq8mDz2V9-URoLQFeCIozB_fYcI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.Name }}",
+            "Roll No": "={{ $json['Roll no'] }}",
+            "Branch": "={{ $json.branch }}",
+            "Email": "={{ $json.Mail }}",
+            "Company Name": "={{ $json['company name '] }}",
+            "Website": "={{ $json.website }}",
+            "Job Title": "={{ $json['job title'] }}",
+            "Interest Area": "={{ $json['interest area '] }}",
+            "Submission Date": "={{ $json['submission on'] }}",
+            "Form Mode": "={{ $json['form mode'] }}",
+            "Submitted At": "={{ $json.submittedAt }}",
+            "Record Type": "={{ $json.formMode }}",
+            "status": "failed "
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Roll No",
+              "displayName": "Roll No",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Branch",
+              "displayName": "Branch",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Job Title",
+              "displayName": "Job Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Interest Area",
+              "displayName": "Interest Area",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Submission Date",
+              "displayName": "Submission Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Form Mode",
+              "displayName": "Form Mode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Submitted At",
+              "displayName": "Submitted At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Record Type",
+              "displayName": "Record Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "e2207084-27ca-48eb-a360-20c119d94f31",
+      "name": "failed data",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        -512
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g0cBbMEEjFcHv494",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "data.person.email",
+              "field2": "email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1120,
+        -976
+      ],
+      "id": "1f9282d4-075d-43ab-b1f8-f8bd687ddcac",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "url": "https://api.hunter.io/v2/combined/find",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "hunterApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $('On form submission').item.json.Mail }}"
+            },
+            {
+              "name": "api_key",
+              "value": "dc3289720807c0896604a578b8b7d2b5b1ff0f13"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "533cbc81-3bb3-4747-a10a-fc413e1eb899",
+      "name": "enrichment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        896,
+        -800
+      ],
+      "credentials": {
+        "hunterApi": {
+          "id": "5bwGTxZALJOJii3c",
+          "name": "clg mail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appaKnd8vZ8PQhK16",
+          "mode": "list",
+          "cachedResultName": "data ",
+          "cachedResultUrl": "https://airtable.com/appaKnd8vZ8PQhK16"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbldSUjjAzKbbzv0M",
+          "mode": "list",
+          "cachedResultName": "Submissions",
+          "cachedResultUrl": "https://airtable.com/appaKnd8vZ8PQhK16/tbldSUjjAzKbbzv0M"
+        },
+        "filterByFormula": "= {Email}='{{ $json.data.person.email }}'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1344,
+        -1040
+      ],
+      "id": "72a97b17-7b58-4dd3-9c51-300378e6c6b0",
+      "name": "Search records",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "qFD7ng02bntSbSDT",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "fields.Email",
+              "field2": "fields.Email"
+            }
+          ]
+        },
+        "joinMode": "enrichInput2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1568,
+        -976
+      ],
+      "id": "5dfa4c3d-4be2-4a57-9a71-8cec6421b6ea",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.data.person.id }}",
+                    "rightValue": "=",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notExists",
+                      "singleValue": true
+                    },
+                    "id": "750df493-c0bd-4af6-b355-75e580e4e35c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "new  customer "
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "b093b16c-9142-4b29-9701-9871b08fa7da",
+                    "leftValue": "={{ $json.data.person.id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "old customer "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.5,
+      "position": [
+        1792,
+        -976
+      ],
+      "id": "a1d85695-28b2-4842-8640-5c9d133ebb94",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "090d822d-263b-4774-a141-6ee30099862e",
+              "name": "customer tag",
+              "value": "new customer ",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2016,
+        -1072
+      ],
+      "id": "84c92c98-d007-44ef-b40f-bafe5a3ddc5f",
+      "name": "new customer data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "214c9ce7-042b-4b3f-bc6c-a21c4be192dc",
+              "name": "customer tag",
+              "value": "old customer ",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2016,
+        -880
+      ],
+      "id": "61bd96cb-2d4b-42d7-861f-01121b12ff18",
+      "name": "old customer"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ff35f4c7-b793-4a37-b034-f64ccff3d228",
+              "name": " net score ",
+              "value": 0,
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2240,
+        -976
+      ],
+      "id": "f670f489-51c0-430d-8741-761bf22ad93c",
+      "name": "net score adding"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst items = $input.all();\n\nreturn items.map(item => {\n  const data = item.json;\n\n  // 1. Customer type\n  const customerTag = String(\n    data[\"customer tag\"] || \"\"\n  ).toLowerCase();\n\n  const isOldCustomer = customerTag.includes(\"old\");\n  const isNewCustomer = customerTag.includes(\"new\");\n\n  // 2. Country detection\n  const country = String(\n    data.country ||\n    data.Country ||\n    data.data?.person?.country ||\n    data.data?.company?.country ||\n    data.fields?.Country ||\n    \"\"\n  ).toLowerCase().trim();\n\n  const targetCountries = [\n    \"us\",\n    \"usa\",\n    \"united states\",\n    \"united states of america\",\n    \"india\",\n    \"uk\",\n    \"united kingdom\",\n    \"great britain\"\n  ];\n\n  const isTargetCountry = targetCountries.includes(country);\n\n  // 3. Software industry detection\n  const companyInfo = [\n    data.industry,\n    data.Industry,\n    data.data?.company?.industry,\n    data.data?.company?.description,\n    data[\"company name \"],\n    data[\"Company Name\"],\n    data.company,\n    data.website\n  ].filter(Boolean).join(\" \").toLowerCase();\n\n  const softwareKeywords = [\n    \"software\",\n    \"saas\",\n    \"technology\",\n    \"tech\",\n    \"it services\",\n    \"information technology\",\n    \"software development\",\n    \"computer software\"\n  ];\n\n  const isSoftware = softwareKeywords.some(keyword =>\n    companyInfo.includes(keyword)\n  );\n\n  // 4. Calculate score\n  let netScore = 0;\n  const reasons = [];\n\n  if (isOldCustomer) {\n    netScore += 1;\n    reasons.push(\"Old customer +1\");\n  }\n\n  if (isTargetCountry) {\n    netScore += 1;\n    reasons.push(\"Target country +1\");\n  }\n\n  if (isSoftware) {\n    netScore += 1;\n    reasons.push(\"Software company +1\");\n  }\n\n  // New customers receive no automatic bonus.\n  // New US software customer = 2 points.\n\n  // 5. Lead classification\n  let leadCategory;\n  let referredTo;\n\n  if (netScore === 3) {\n    leadCategory = \"Premium\";\n    referredTo = \"Manager\";\n  } else if (netScore === 1 || netScore === 2) {\n    leadCategory = \"Good\";\n     // leadCategory = \"Premium\";\n    referredTo = \"Sales Head\";\n  } else {\n    // leadCategory = \"Good\";\n   leadCategory = \"Low priority\";\n    referredTo = \"Google Sheets Only\";\n  }\n\n  // 6. Return original data and scoring fields\n  return {\n    json: {\n      ...data,\n      isOldCustomer,\n      isNewCustomer,\n      detectedCountry: country || \"Unknown\",\n      isTargetCountry,\n      isSoftware,\n      netScore,\n      scoreReasons: reasons.join(\", \") || \"No qualifying conditions\",\n      leadCategory,\n      referredTo,\n      leadStatus: netScore > 0 ? \"Qualified\" : \"Unqualified\"\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2464,
+        -976
+      ],
+      "id": "54ba723c-571a-4846-b302-272047b9b20d",
+      "name": "calculate net score"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.leadCategory }}",
+                    "rightValue": "Low priority",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "204cf206-960c-411f-8e72-3a3a185f7b31"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "low priorty"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "a8238bc7-884e-4020-a247-c0ac757a565f",
+                    "leftValue": "={{ $json.leadCategory }}",
+                    "rightValue": "Good",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "good lead "
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "31346b4e-0396-45a5-907d-a2b07164a188",
+                    "leftValue": "={{ $json.leadCategory }}",
+                    "rightValue": "Premium",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "premium lead "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.5,
+      "position": [
+        2688,
+        -992
+      ],
+      "id": "1a1cffd1-8454-4551-b5e9-73a78dc56aec",
+      "name": "seprating with catogary"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('seprating with catogary').item.json.data.person.email }}",
+        "subject": "confirmation mail",
+        "emailType": "text",
+        "message": "thanks for reaching for order please confirm your your order by replying \"CONFIRM \"",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3136,
+        -784
+      ],
+      "id": "79ecfda0-23b7-4792-9ad4-8c3b966b8c06",
+      "name": "conforming mail",
+      "webhookId": "37ebe467-813b-46ed-af27-dc7cd6870d31",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "9S4MXRKeYJQpCS5V",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "NovaByte Solutions",
+              "replaceText": "chatbot"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        3136,
+        -592
+      ],
+      "id": "24541775-54c2-4c3a-935d-84ddc1d3b817",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "1gfvBQZJGahe05sn",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=data",
+        "name": "={{ $('data of premium customer').item.json.name }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1N1Fz91goC17Sl-h3JtuvxZV4iyDVQ9is",
+          "mode": "list",
+          "cachedResultName": "datan8n",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1N1Fz91goC17Sl-h3JtuvxZV4iyDVQ9is"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3584,
+        -592
+      ],
+      "id": "2b895415-b68c-4621-9478-a711323a76a8",
+      "name": "upload data as pdf",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "zD0rEkOXVN9eQWVH",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.documentId }}",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "data",
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3360,
+        -592
+      ],
+      "id": "90ba5982-84c7-44a1-b6f2-a39940996c3a",
+      "name": "Download data",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "zD0rEkOXVN9eQWVH",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1eK3_XdY2NKUw6NCFep0L6uRbW9s9sTbxZ5POWsQKG_w",
+          "mode": "list",
+          "cachedResultName": "sample customer",
+          "cachedResultUrl": "https://docs.google.com/document/d/1eK3_XdY2NKUw6NCFep0L6uRbW9s9sTbxZ5POWsQKG_w/edit?usp=drivesdk"
+        },
+        "name": "={{ $json.data.person.name.fullName }}-{{ $json.data.person.geo.countryCode }}- customer ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2912,
+        -592
+      ],
+      "id": "d9275678-f3d4-49df-9ed9-63aa87baca66",
+      "name": "data of premium customer",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "zD0rEkOXVN9eQWVH",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteFile",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Update a document').item.json.documentId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3808,
+        -592
+      ],
+      "id": "8bd806b8-2bf3-4c79-af49-b354a1fdb044",
+      "name": "delete the copy file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "zD0rEkOXVN9eQWVH",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0CFAD97GJ1",
+          "mode": "list",
+          "cachedResultName": "all-ai-lead"
+        },
+        "text": "checkout and follow the lead ",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        4032,
+        -1072
+      ],
+      "id": "13563819-3049-4482-b392-321da5972b00",
+      "name": "sending a message for good lead",
+      "webhookId": "4aa8fd11-dfac-4d61-b157-99d90a6f16e4",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "JlvvKzzSYH67EjXu",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['e mail'] }}",
+        "subject": "confirmation",
+        "emailType": "text",
+        "message": "Hello !\n we recived your order will proceeded soon.\nThanks .",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3136,
+        -1168
+      ],
+      "id": "27b4bfa2-7bdb-47c0-8d70-db9b7243ae0d",
+      "name": "confirming mail",
+      "webhookId": "9aa3e43e-6381-4103-a03a-262b422a2b85",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "9S4MXRKeYJQpCS5V",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('seprating with catogary').item.json.data.person.email }}",
+        "subject": "confirmation",
+        "emailType": "text",
+        "message": "hello! \nwe have received your order will proceed soon.\n Thanks .",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        4256,
+        -1072
+      ],
+      "id": "92024ac4-a367-418f-ae82-58edd51c5af9",
+      "name": "confirming mail1",
+      "webhookId": "48e79353-391f-4cc6-bd49-9a5432823349",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "9S4MXRKeYJQpCS5V",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1vwVi27Q5K2h3MmTCKKHkQVcbdTxTzT0Kzw2hvGuXv4E",
+          "mode": "list",
+          "cachedResultName": "low priority",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vwVi27Q5K2h3MmTCKKHkQVcbdTxTzT0Kzw2hvGuXv4E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vwVi27Q5K2h3MmTCKKHkQVcbdTxTzT0Kzw2hvGuXv4E/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name ": "={{ $('calculate net score').item.json.data.person.name.fullName }}",
+            "e mail": "={{ $('calculate net score').item.json.data.person.email }}",
+            "lead score ": "={{ $('calculate net score').item.json.netScore }}",
+            "priority": "={{ $('calculate net score').item.json.leadCategory }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name ",
+              "displayName": "name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "e mail",
+              "displayName": "e mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "lead score ",
+              "displayName": "lead score ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2912,
+        -1168
+      ],
+      "id": "3fe56c75-9d7d-4427-bb2a-d13af6ddcd3a",
+      "name": "data for the sales team",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g0cBbMEEjFcHv494",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U0CFDPHT8NA",
+          "mode": "list",
+          "cachedResultName": "gargish687 (@gargish687)"
+        },
+        "text": "=checkout this is a premium lead  and has mail id  {{ $json.data.person.email }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        2912,
+        -784
+      ],
+      "id": "4fb5aeed-be11-42c3-b408-9357f46bf53d",
+      "name": "ubdating about lead",
+      "webhookId": "6cf6dd02-67f1-49dd-90af-546f75d3d337",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "JlvvKzzSYH67EjXu",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U0CFDPHT8NA",
+          "mode": "list",
+          "cachedResultName": "gargish687 (@gargish687)"
+        },
+        "text": "review the data of premium customer ",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        4032,
+        -592
+      ],
+      "id": "8fff2132-0d30-4d37-a2d1-05fb0903cbb0",
+      "name": "message for the content creater",
+      "webhookId": "c958edb2-e949-4acb-8beb-915f91762661",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "JlvvKzzSYH67EjXu",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "gargish686@gmail.com",
+        "subject": "approval for lead ",
+        "message": "=we got a good lead should we proceed\n\n",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3584,
+        -976
+      ],
+      "id": "f0e9daf3-8c12-4c9a-b678-22bbbe5ff1ce",
+      "name": "Send message and wait for response",
+      "webhookId": "86066763-6957-40d8-9551-95189d86a601",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "9S4MXRKeYJQpCS5V",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1eK3_XdY2NKUw6NCFep0L6uRbW9s9sTbxZ5POWsQKG_w",
+          "mode": "list",
+          "cachedResultName": "sample customer",
+          "cachedResultUrl": "https://docs.google.com/document/d/1eK3_XdY2NKUw6NCFep0L6uRbW9s9sTbxZ5POWsQKG_w/edit?usp=drivesdk"
+        },
+        "name": "={{ $json.data.person.name.fullName }} - good lead ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2912,
+        -976
+      ],
+      "id": "03fdb6ae-54ed-4c72-b05a-7696422e7a26",
+      "name": "copy the good lead data",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "zD0rEkOXVN9eQWVH",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "data",
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3136,
+        -976
+      ],
+      "id": "189a7290-54c1-4fa5-b34c-cbb3d5a932eb",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "zD0rEkOXVN9eQWVH",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "gargish686@gmail.com",
+        "subject": "=pdf for  {{ $json.name }}",
+        "emailType": "text",
+        "message": "=sir i have sent you the attachment with the  pdf of the  {{ $json.name }}",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {
+                "property": "=data"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3360,
+        -976
+      ],
+      "id": "9f3ba0b7-771b-4b8c-817f-910cb9bc6a44",
+      "name": "Send a message",
+      "webhookId": "4f2e6ffd-81e5-42d6-b272-fecd5205032f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "9S4MXRKeYJQpCS5V",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "acc0a166-9e66-4f15-a487-d0ba5bfbaee5",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        3808,
+        -976
+      ],
+      "id": "ba770799-db36-423c-905c-fd43a00dbbb5",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1vwVi27Q5K2h3MmTCKKHkQVcbdTxTzT0Kzw2hvGuXv4E",
+          "mode": "list",
+          "cachedResultName": "low priority",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vwVi27Q5K2h3MmTCKKHkQVcbdTxTzT0Kzw2hvGuXv4E/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vwVi27Q5K2h3MmTCKKHkQVcbdTxTzT0Kzw2hvGuXv4E/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name ": "={{ $('seprating with catogary').item.json.data.person.name.fullName }}",
+            "e mail": "={{ $('seprating with catogary').item.json.data.person.email }}",
+            "lead score ": "={{ $('seprating with catogary').item.json.netScore }}",
+            "priority": "rejected by the marketing head "
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name ",
+              "displayName": "name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "e mail",
+              "displayName": "e mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "lead score ",
+              "displayName": "lead score ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        4032,
+        -880
+      ],
+      "id": "12eb0b14-bc28-489b-90ec-2264497718cb",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g0cBbMEEjFcHv494",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1TcY2KhfbGApcplWzQHLJpe7BDuzAtp6w1cNg8thU7cM",
+          "mode": "list",
+          "cachedResultName": "high priority ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TcY2KhfbGApcplWzQHLJpe7BDuzAtp6w1cNg8thU7cM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TcY2KhfbGApcplWzQHLJpe7BDuzAtp6w1cNg8thU7cM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name ": "={{ $('seprating with catogary').item.json.data.person.name.fullName }}",
+            "e mail": "={{ $('seprating with catogary').item.json.data.person.email }}",
+            "lead score ": "={{ $('seprating with catogary').item.json.netScore }}",
+            "priority": "={{ $('seprating with catogary').item.json.leadCategory }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name ",
+              "displayName": "name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "e mail",
+              "displayName": "e mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "lead score ",
+              "displayName": "lead score ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3360,
+        -784
+      ],
+      "id": "30836203-5e2c-4a7f-b148-97181a27628a",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g0cBbMEEjFcHv494",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "submittedAt": "2026-11-06T00:40:00.000+05:30",
+          "formMode": "test",
+          "Name": "Test User",
+          "Roll no": 1,
+          "branch": "CS",
+          "Mail": "matt@hunter.io",
+          "company name ": "Stripe",
+          "website": "stripe.com",
+          "job title": "IT",
+          "interest area ": "ai",
+          "submission on": "2026-11-06",
+          "form mode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "check mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check mail": {
+      "main": [
+        [
+          {
+            "node": "verify email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "failed data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "verify email": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "enrichment",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "failed after 3 rd e mail verification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "enrichment": {
+      "main": [
+        [
+          {
+            "node": "Enrichment Found",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "new customer data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "old customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "new customer data": {
+      "main": [
+        [
+          {
+            "node": "net score adding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "old customer": {
+      "main": [
+        [
+          {
+            "node": "net score adding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "net score adding": {
+      "main": [
+        [
+          {
+            "node": "calculate net score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calculate net score": {
+      "main": [
+        [
+          {
+            "node": "seprating with catogary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "seprating with catogary": {
+      "main": [
+        [
+          {
+            "node": "data for the sales team",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "copy the good lead data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ubdating about lead",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "data of premium customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document": {
+      "main": [
+        [
+          {
+            "node": "Download data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download data": {
+      "main": [
+        [
+          {
+            "node": "upload data as pdf",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "data of premium customer": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "upload data as pdf": {
+      "main": [
+        [
+          {
+            "node": "delete the copy file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete the copy file": {
+      "main": [
+        [
+          {
+            "node": "message for the content creater",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sending a message for good lead": {
+      "main": [
+        [
+          {
+            "node": "confirming mail1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "data for the sales team": {
+      "main": [
+        [
+          {
+            "node": "confirming mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ubdating about lead": {
+      "main": [
+        [
+          {
+            "node": "conforming mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "copy the good lead data": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "sending a message for good lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "confirming mail1": {
+      "main": [
+        []
+      ]
+    },
+    "conforming mail": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "dffbd30e-d75a-43a6-9a89-37f081c6157f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8d71ad9ce251da26c064dec8826d6a758f8a63f8c2fac241bff758994a8fea52"
+  },
+  "nodeGroups": [],
+  "id": "HE8PEBgvFnj4Hkxh",
+  "tags": []
+}
