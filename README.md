@@ -1,4 +1,4 @@
-# AI Sales Lead Automation
+#  Sales Lead Automation
 
 An n8n-based sales lead qualification and enrichment automation workflow designed to automate lead verification, customer classification, scoring, and reporting.
 
